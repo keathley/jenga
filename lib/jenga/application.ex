@@ -1,16 +1,25 @@
 defmodule Jenga.Application do
   use Application
 
+  alias Jenga.AlarmHandler
+
   def start(_type, _args) do
     config = [
-      port: "PORT",
-      db_url: "DB_URL",
+      port: {"PORT", 4000},
+      db_url: {"DB_URL", "localhost"},
     ]
+
+    :gen_event.swap_handler(
+      :alarm_handler,
+      {:alarm_handler, :swap},
+      {AlarmHandler, :ok})
+
 
     children = [
       {Jenga.Config, config},
-      Jenga.Repo,
       JengaWeb.Endpoint,
+      {Jenga.DemoConnection, []},
+      Jenga.Database.Supervisor,
     ]
 
     opts = [strategy: :one_for_one, name: Jenga.Supervisor]

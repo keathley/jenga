@@ -29,10 +29,12 @@ defmodule Jenga.Config do
   defp load_config(table, config, retry_count \\ 0)
   defp load_config(_table, [], _), do: :ok
   defp load_config(_table, _, 10), do: :error
-  defp load_config(table, [{k, v} | tail], retry_count) do
+  defp load_config(table, [{k, {v, default}} | tail], retry_count) do
     case System.get_env(v) do
       nil ->
-        load_config(table, [{k, v} | tail], retry_count + 1)
+        :ets.insert(table, {k, default})
+        load_config(table, tail, retry_count)
+        # load_config(table, [{k, v} | tail], retry_count + 1)
 
       value ->
         :ets.insert(table, {k, value})

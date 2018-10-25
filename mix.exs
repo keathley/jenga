@@ -20,7 +20,7 @@ defmodule Jenga.Mixfile do
   def application do
     [
       mod: {Jenga.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:sasl, :logger, :runtime_tools]
     ]
   end
 

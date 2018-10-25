@@ -9,6 +9,13 @@ defmodule JengaWeb.UpController do
   end
 
   defp status do
-    {500, %{status: "LOADING"}}
+    case Jenga.Database.check_status() do
+      :ok ->
+        {200, %{status: "OK"}}
+
+      _ ->
+        {500, %{status: "LOADING"}}
+    end
   end
 end
+
