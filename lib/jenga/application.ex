@@ -14,7 +14,6 @@ defmodule Jenga.Application do
       {:alarm_handler, :swap},
       {AlarmHandler, :ok})
 
-
     children = [
       {Jenga.Config, config},
       JengaWeb.Endpoint,

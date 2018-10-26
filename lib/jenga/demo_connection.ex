@@ -19,9 +19,15 @@ defmodule Jenga.DemoConnection do
   end
 
   def handle_info(:try_connect, state) do
-    # Logger.warn "Trying to connect"
-    # ... try to connect
-    {:noreply, state}
+    case do_connect do
+      :ok ->
+        {:noreply, %{state | state: :connected}}
+
+      :error ->
+        wait_for = 3_000 + backoff() + jitter()
+        Process.send_after(self(), :try_connect, wait_for)
+        {:noreply, state}
+    end
   end
 
   def backoff do
